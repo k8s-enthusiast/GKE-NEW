@@ -1,0 +1,11 @@
+apiVersion: v1
+data:
+  config: |
+     nonMasqueradeCIDRs: [NONMASQUERADECIDRS]
+     resyncInterval: 60s
+     masqLinkLocal: false
+kind: ConfigMap
+metadata:
+  name: ip-masq-agent
+  namespace: kube-system
+  selfLink: /api/v1/namespaces/kube-system/configmaps/ip-masq-agent

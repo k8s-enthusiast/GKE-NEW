@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: api-proxy-sa
+  namespace: api-proxy
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-api-proxy
+  labels:
+    app: k8s-api-proxy
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: k8s-api-proxy
+  template:
+    metadata:
+      labels:
+        app: k8s-api-proxy
+    spec:
+      serviceAccountName: api-proxy-sa
+      securityContext:
+        runAsUser: 100
+      containers:
+        - name: k8s-api-proxy
+          image: ${k8s_api_proxy_image}:${k8s_api_proxy_tag}
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8118
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: 8118
+          readinessProbe:
+            tcpSocket:
+              port: 8118
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
